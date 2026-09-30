@@ -2,11 +2,23 @@
 
 Concrete OMP subagent configuration for the 5 core roles. The Observer is not an OMP subagent (see `README.md` in this directory).
 
+**Last updated:** 2026-09-30. Model assignments reflect the post-Terra-strictness-incident decisions. The Researcher and Planner model choices are still under discussion.
+
+## Model assignment summary
+
+| Role | Model | Status |
+| --- | --- | --- |
+| S — Supervisor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native` | Decided |
+| P — Planner | `github-copilot/claude-sonnet-5` | Under discussion (ideally Opus 5.5, but cost-prohibitive) |
+| R — Researcher | `deepseek/deepseek-flash` | Under discussion (current in `~/.omp/agent/config.yml`) |
+| E — Executor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native` | Decided |
+| RV — Reviewer | `openai-codex/gpt-5.6-terra` or `openai-codex/gpt-6-sol` | Decided (same cost per token; either works) |
+
 ## Supervisor (S)
 
 ```yaml
 name: supervisor
-model: qwen3.8-27b-q4-gpukv-native  # or equivalent action-biased model
+model: vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:high
 description: >
   Autonomous execution coordinator. Dispatches R, P, E, RV in sequence.
   Writes gate records. Applies the 3-strike rule. Biased toward action.
@@ -24,7 +36,7 @@ system_prompt: |
 
 ```yaml
 name: researcher
-model: qwen3.8-27b-q4-gpukv-native
+model: deepseek/deepseek-flash:high  # under discussion; qwen3.8 also viable
 description: >
   Gathers current-source facts, environment inventory, external-owner evidence.
   Runs commands against the target environment. Read-only for product files.
@@ -41,7 +53,7 @@ system_prompt: |
 
 ```yaml
 name: planner
-model: qwen3.8-27b-q4-gpukv-native  # or terra for more thorough reference checking
+model: github-copilot/claude-sonnet-5  # under discussion; ideally Opus 5.5 but cost-prohibitive
 description: >
   Writes or revises the workcard from R's evidence.
   The workcard is a short execution contract, not a second architecture plan.
@@ -57,7 +69,7 @@ system_prompt: |
 
 ```yaml
 name: executor
-model: qwen3.8-27b-q4-gpukv-native
+model: vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:high
 description: >
   Implements one approved workcard. The only role that changes product files.
   Runs targeted tests and declared smoke.
@@ -75,7 +87,7 @@ system_prompt: |
 
 ```yaml
 name: reviewer
-model: gpt-5.6-terra  # or equivalent thorough model
+model: openai-codex/gpt-5.6-terra:xhigh  # or openai-codex/gpt-6-sol:xhigh (same cost per token)
 description: >
   Independently reviews E's diff and evidence. Findings are advisory.
   Does not block the package unilaterally.

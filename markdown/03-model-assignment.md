@@ -2,16 +2,18 @@
 
 Which model for which role, and why. This is based on observed behavior in the agent-threat-detection project (2026-09), where GPT 5.6 Terra as Supervisor produced a cascading chain of over-restrictive gate records and Qwen 3.8 27B as Executor performed reliably.
 
-## Recommended assignment
+**Last updated:** 2026-09-30. Researcher and Planner model choices are still under discussion.
 
-| Role | Model | Rationale |
-| --- | --- | --- |
-| **S — Supervisor** | Qwen 3.8 27B (or equivalent action-biased model) | Needs to bias toward action, not create restrictions. Needs to make decisions quickly and dispatch the next role. Over-documentation is a failure mode. |
-| **P — Planner** | Qwen 3.8 27B or GPT 5.6 Terra | P needs to be careful and precise. Both models work. Terra is slightly better at citing references; Qwen is better at keeping the workcard short. |
-| **R — Researcher** | Qwen 3.8 27B | Needs to run commands without hesitation. Needs to report what it finds, not what it thinks. Terra tends to interpret "read-only" as "cannot execute." |
-| **E — Executor** | Qwen 3.8 27B | Needs to follow the workcard precisely. Needs to run tests and record results. Does not need to over-think. |
-| **RV — Reviewer** | GPT 5.6 Terra (or equivalent thorough model) | Needs to be careful, catch inconsistencies, produce structured findings. The risk-aversion that hurts S is a strength here. |
-| **O — Observer** | Qwen 3.8 27B | Needs to translate jargon to plain English. Needs to be concise. Terra is too formal for this role. |
+## Current assignment
+
+| Role | Model | Status | Rationale |
+| --- | --- | --- | --- |
+| **S — Supervisor** | Qwen 3.8 27B (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to bias toward action, not create restrictions. Needs to make decisions quickly and dispatch the next role. Over-documentation is a failure mode. |
+| **P — Planner** | Claude Sonnet 5 (`github-copilot/claude-sonnet-5`) | Under discussion | P needs to be careful and precise, good at citing references. Ideally Opus 5.5, but cost-prohibitive. Sonnet 5 is the cost-effective choice. |
+| **R — Researcher** | DeepSeek Flash (`deepseek/deepseek-flash`) | Under discussion | Needs to run commands without hesitation, report what it finds. Currently DeepSeek Flash in the OMP config. Qwen 3.8 27B is also viable. |
+| **E — Executor** | Qwen 3.8 27B (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to follow the workcard precisely. Needs to run tests and record results. Does not need to over-think. |
+| **RV — Reviewer** | GPT 5.6 Terra or GPT 6 Sol (`openai-codex/gpt-5.6-terra` / `openai-codex/gpt-6-sol`) | Decided | Same cost per token. Needs to be careful, catch inconsistencies, produce structured findings. The risk-aversion that hurts S is a strength here. |
+| **O — Observer** | Qwen 3.8 27B | Decided | Needs to translate jargon to plain English. Needs to be concise. Terra is too formal for this role. |
 
 ## The Terra strictness problem
 

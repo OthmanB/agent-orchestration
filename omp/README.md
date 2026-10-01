@@ -70,10 +70,10 @@ In OMP, the model for each role is configured in the subagent definition. The re
 
 | Role | Model | OMP config key |
 | --- | --- | --- |
-| S — Supervisor | Qwen 3.8 27B | `supervisor.model` |
-| P — Planner | Qwen 3.8 27B or Terra | `planner.model` |
-| R — Researcher | Qwen 3.8 27B | `researcher.model` |
-| E — Executor | Qwen 3.8 27B | `executor.model` |
-| RV — Reviewer | GPT 5.6 Terra | `reviewer.model` |
+| S — Supervisor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`| `supervisor.model` |
+| P — Planner |  `github-copilot/claude-sonnet-5` | `planner.model` |
+| R — Researcher | `deepseek/deepseek-flash` | `researcher.model` |
+| E — Executor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`| | `executor.model` |
+| RV — Reviewer | `openai-codex/gpt-5.6-terra` or `openai-codex/gpt-6-sol`| `reviewer.model` |
 
 The Observer is not an OMP subagent. It runs in a separate session with its own model (Qwen 3.8 27B recommended).

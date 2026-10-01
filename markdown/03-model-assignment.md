@@ -8,12 +8,20 @@ Which model for which role, and why. This is based on observed behavior in the a
 
 | Role | Model | Status | Rationale |
 | --- | --- | --- | --- |
-| **S — Supervisor** | Qwen 3.8 27B (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to bias toward action, not create restrictions. Needs to make decisions quickly and dispatch the next role. Over-documentation is a failure mode. |
+| **S — Supervisor** | Qwen 3.8 27B (`vllm-tp2/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to bias toward action, not create restrictions. Needs to make decisions quickly and dispatch the next role. Over-documentation is a failure mode. |
 | **P — Planner** | Claude Sonnet 5 (`github-copilot/claude-sonnet-5`) | Under discussion | P needs to be careful and precise, good at citing references. Ideally Opus 5.5, but cost-prohibitive. Sonnet 5 is the cost-effective choice. |
 | **R — Researcher** | DeepSeek Flash (`deepseek/deepseek-flash`) | Under discussion | Needs to run commands without hesitation, report what it finds. Currently DeepSeek Flash in the OMP config. Qwen 3.8 27B is also viable. |
-| **E — Executor** | Qwen 3.8 27B (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to follow the workcard precisely. Needs to run tests and record results. Does not need to over-think. |
+| **E — Executor** | Qwen 3.8 27B (`vllm-tp2/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to follow the workcard precisely. Needs to run tests and record results. Does not need to over-think. |
 | **RV — Reviewer** | GPT 5.6 Terra or GPT 6 Sol (`openai-codex/gpt-5.6-terra` / `openai-codex/gpt-6-sol`) | Decided | Same cost per token. Needs to be careful, catch inconsistencies, produce structured findings. The risk-aversion that hurts S is a strength here. |
 | **O — Observer** | Qwen 3.8 27B | Decided | Needs to translate jargon to plain English. Needs to be concise. Terra is too formal for this role. |
+
+## Fallback chains
+
+Configured in `retry.fallbackChains` (`~/.omp/agent/config.yml`), triggered by rate-limit/quota errors:
+
+- **R — Researcher:** `deepseek/deepseek-flash` → `vllm-tp2/qwen3.8-27b-q4-gpukv-native` → `vllm-tp2-remote/qwen3.8-27b-q4-gpukv-native` (DeepSeek account uncharged or limit hit; the docs' `vllm-tp2-local` corresponds to the LAN provider `vllm-tp2`).
+- **P — Planner:** `github-copilot/claude-sonnet-5` → `openai-codex/gpt-6-sol` (Copilot Pro+ premium-request limit hit; falls back to the ChatGPT-subscription account, so its 5h/weekly windows apply).
+
 
 ## The Terra strictness problem
 

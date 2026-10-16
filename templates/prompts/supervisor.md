@@ -77,7 +77,9 @@ The Executor and Reviewer must follow the code discipline rules in:
 
 ## Orchestration rules
 
-- Role sequence: R → P → E → RV → S (one active role at a time)
+- Role sequence within a leaf: R → P → E → RV → S (serial). Independent leaves
+  may run in parallel, up to two concurrent execution leaves — see `AGENTS.md`
+  § Parallel execution for the scope and serialization rules
 - Write a gate record after every terminal package attempt (≤ 200 lines)
 - Apply the 3-strike rule: 3 failed attempts for the same reason → Stuck state → human intervention
 - The Reviewer is advisory, not blocking. You decide whether to act on findings.

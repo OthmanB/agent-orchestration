@@ -4,7 +4,7 @@ This directory contains OMP-specific integration details. The core orchestration
 
 ## OMP subagent setup
 
-OMP (Oh My Pi) supports serialized subagent dispatch: one active subagent at a time, dispatched by the Supervisor. This maps naturally to the R→P→E→RV→S role sequence.
+OMP (Oh My Pi) dispatches subagents via its `task` tool. Within a leaf, dispatch is serial (R→P→E→RV→S). OMP also supports concurrent subagents (`task.maxConcurrency` in `~/.omp/agent/config.yml`; OMP default is 32) — this campaign sets it to 2, so up to two independent leaves may run in parallel. See `AGENTS.md` § Parallel execution at the repo root for the scope and serialization rules.
 
 See [`subagent-setup.md`](subagent-setup.md) for the concrete OMP subagent definitions.
 
@@ -46,13 +46,18 @@ OMP does not support a role that sits above the Supervisor. The Observer (O) can
 
 This is the "manual feedback loop" described in [`markdown/02-role-contracts/observer.md`](../markdown/02-role-contracts/observer.md).
 
-### Single active subagent
+### Subagent concurrency
 
-OMP permits only one active subagent at a time. This means:
+OMP supports concurrent subagents: `task.maxConcurrency` in `~/.omp/agent/config.yml`
+caps how many run at once (OMP default 32; this campaign sets 2). The standing
+policy (see `AGENTS.md` § Parallel execution at the repo root):
 
-- Roles are strictly serialized (R → P → E → RV → S).
-- Parallel work is not possible within a single OMP session.
-- If you need parallel work (e.g., two independent packages), run two separate OMP sessions.
+- Up to two independent leaves may run concurrently (local vLLM session budget).
+- Parallel leaves must touch disjoint files — separate sub-repositories where
+  possible.
+- Within a leaf, roles stay serial (R → P → E → RV → S).
+- Git commits on the canonical branch and cluster deploy/mutation steps are
+  always serialized between parallel leaves.
 
 ### No auto-trigger for the Observer
 

@@ -40,8 +40,9 @@ Write or revise the workcard: a short, executable contract that tells E exactly 
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **Qwen 3.8 27B** | Good | Follows the workcard structure well. Does not over-elaborate. |
-| GPT 5.6 Terra | Good for P | Thorough at citing references and stating invariants. The risk-aversion that hurts S is useful here: P should be careful. |
+| **Claude Sonnet 5.5** | In use | Careful and precise; strong at citing references against current source. |
+| Qwen 3.8 27B | Good | Fast, cheap, workable. |
+| GPT 5.6 Terra | Historical (2026-09) | Good for P. |
 
 ## Prompt template
 

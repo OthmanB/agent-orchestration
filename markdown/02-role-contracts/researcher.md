@@ -41,8 +41,9 @@ Gather current-source facts, environment inventory, and external-owner evidence 
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **Qwen 3.8 27B** | Best | Runs commands without hesitation. Reports what it finds. Does not over-interpret. |
-| GPT 5.6 Terra | Poor for R | Tends to interpret "read-only" as "cannot execute." Produces long, careful documents that say very little. |
+| **DeepSeek Flash** | In use | Runs commands without hesitation; concise evidence reports. |
+| Qwen 3.8 27B | Viable | Local fallback hop when DeepSeek is unavailable. |
+| GPT 5.6 Terra | Historical (2026-09) | Poor for R — returned BLOCKED_NO_EXECUTION_CHANNEL. |
 
 ## Prompt template
 

@@ -47,8 +47,9 @@ Coordinate the package queue, dispatch roles in sequence, record gate records, a
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **Qwen 3.8 27B** | Best | Action-biased. Follows instructions without adding unrequested constraints. Does not over-document. |
-| GPT 5.6 Terra | Poor for S, good for RV | Thorough and document-oriented, but risk-averse. Creates invented constraints. See [notes/2026-09-30-supervisor-strictness-incident.md](../../notes/2026-09-30-supervisor-strictness-incident.md). |
+| **Claude Sonnet 5.5** | In use | Careful, decisive dispatch; strong structured judgment. Risk-averse family — mitigations: experimental-environment declaration, 3-strike rule, reset directive, fallback chain. |
+| Qwen 3.8 27B | Good alternative | Action-biased; the post-incident default. Revert target if over-restriction recurs. |
+| GPT 5.6 Terra | Historical (2026-09) | Poor for S — the 2026-09-30 strictness incident. Good for RV. |
 
 ## Prompt template
 

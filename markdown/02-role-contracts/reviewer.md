@@ -46,8 +46,9 @@ Independently review E's diff and evidence against the workcard, the parent plan
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **GPT 5.6 Terra** | Best | Thorough, catches inconsistencies, good at structured review. The risk-aversion that hurts S is a strength here: RV should be careful. |
-| Qwen 3.8 27B | Good | Can do the review, but may miss subtle inconsistencies that Terra would catch. |
+| **GPT 6.1 Sol** | In use / Best | Thorough, catches inconsistencies, structured findings. Last-resort model of the fallback chain. |
+| Qwen 3.8 27B | Good | Can do the review; may miss subtle inconsistencies. |
+| GPT 5.6 Terra | Historical (2026-09/10) | Was Best for RV before the 2026-10 reassignment. |
 
 ## Prompt template
 

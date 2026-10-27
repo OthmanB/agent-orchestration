@@ -68,6 +68,10 @@ Normal role sequence:
 7. **E** corrects accepted review findings and reruns the affected checks/smoke.
 8. **S** writes the gate record and starts the earliest newly unblocked package.
 
+## Model quota fallback
+
+When a role's model hits its provider's quota, the harness's configured fallback chain takes over transparently — orchestration does not intervene, does not treat the quota attempt as a failed attempt, and does not perform quota health-checks. The gate record must name the model that actually performed the work (see the model-identity requirement above). Harness-specific chain configuration: see `omp/README.md` and `03-model-assignment.md`.
+
 ## Autonomous Replanning
 
 P may revise a workcard without human approval when the revision:

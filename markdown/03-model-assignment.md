@@ -2,25 +2,26 @@
 
 Which model for which role, and why. This is based on observed behavior in the agent-threat-detection project (2026-09), where GPT 5.6 Terra as Supervisor produced a cascading chain of over-restrictive gate records and Qwen 3.8 27B as Executor performed reliably.
 
-**Last updated:** 2026-09-30. Researcher and Planner model choices are still under discussion.
+**Last updated:** 2026-10-27. Model choices are decided for all roles.
 
 ## Current assignment
 
 | Role | Model | Status | Rationale |
 | --- | --- | --- | --- |
-| **S — Supervisor** | Qwen 3.8 27B (`vllm-tp2/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to bias toward action, not create restrictions. Needs to make decisions quickly and dispatch the next role. Over-documentation is a failure mode. |
-| **P — Planner** | Claude Sonnet 5 (`github-copilot/claude-sonnet-5`) | Under discussion | P needs to be careful and precise, good at citing references. Ideally Opus 5.5, but cost-prohibitive. Sonnet 5 is the cost-effective choice. |
-| **R — Researcher** | DeepSeek Flash (`deepseek/deepseek-flash`) | Under discussion | Needs to run commands without hesitation, report what it finds. Currently DeepSeek Flash in the OMP config. Qwen 3.8 27B is also viable. |
-| **E — Executor** | Qwen 3.8 27B (`vllm-tp2/qwen3.8-27b-q4-gpukv-native`) | Decided | Needs to follow the workcard precisely. Needs to run tests and record results. Does not need to over-think. |
-| **RV — Reviewer** | GPT 5.6 Terra or GPT 6 Sol (`openai-codex/gpt-5.6-terra` / `openai-codex/gpt-6-sol`) | Decided | Same cost per token. Needs to be careful, catch inconsistencies, produce structured findings. The risk-aversion that hurts S is a strength here. |
-| **O — Observer** | Qwen 3.8 27B | Decided | Needs to translate jargon to plain English. Needs to be concise. Terra is too formal for this role. |
+| **S — Supervisor** | Claude Sonnet 5.5 (`anthropic/claude-sonnet-5-5:high`) | Decided | Needs to make decisions quickly and dispatch the next role; over-documentation is a failure mode. Sonnet class is careful — the risk-aversion that hurt the Terra incident is managed by the standing mitigations below. |
+| **P — Planner** | Claude Sonnet 5.5 (`anthropic/claude-sonnet-5-5:xhigh`) | Decided | P needs to be careful and precise, good at citing references. |
+| **R — Researcher** | DeepSeek Flash (`deepseek/deepseek-flash:high`) | Decided | Needs to run commands without hesitation and report what it finds. |
+| **E — Executor** | Qwen 3.8 27B (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh`) | Decided | Needs to follow the workcard precisely, run tests, record results. Does not need to over-think. |
+| **RV — Reviewer** | GPT 6.1 Sol (`openai-codex/gpt-6.1-sol:high`) | Decided | Needs to be careful, catch inconsistencies, produce structured findings. It is the last-resort model of the fallback chain. |
+| **O — Observer** | Qwen 3.8 27B (`vllm-tp2-local/...`, the `default` role) | Decided | Needs to translate jargon to plain English. Needs to be concise. |
 
 ## Fallback chains
 
 Configured in `retry.fallbackChains` (`~/.omp/agent/config.yml`), triggered by rate-limit/quota errors:
 
-- **R — Researcher:** `deepseek/deepseek-flash` → `vllm-tp2/qwen3.8-27b-q4-gpukv-native` → `vllm-tp2-remote/qwen3.8-27b-q4-gpukv-native` (DeepSeek account uncharged or limit hit; the docs' `vllm-tp2-local` corresponds to the LAN provider `vllm-tp2`).
-- **P — Planner:** `github-copilot/claude-sonnet-5` → `openai-codex/gpt-6-sol` (Copilot Pro+ premium-request limit hit; falls back to the ChatGPT-subscription account, so its 5h/weekly windows apply).
+- **S + P (shared):** `anthropic/claude-sonnet-5-5` → `github-copilot/claude-sonnet-5.5:xhigh` → `openai-codex/gpt-6.1-sol:xhigh`. Both roles resolve to the same catalog model, so one chain covers them: Anthropic window hit → Copilot's 5h/weekly windows → Codex.
+- **R — Researcher:** `deepseek/deepseek-flash` → `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh` (DeepSeek key unavailable or limit hit → local).
+- **No chain:** E/default/smol/slow run on the local vLLM server and have nowhere to hop if the server or the link is down; RV (`openai-codex/gpt-6.1-sol`) is the last-resort model of the chain.
 
 
 ## The Terra strictness problem
@@ -36,7 +37,15 @@ The root cause was not a prompt failure. It was a model characteristic: Terra is
 
 **The fix:** use Qwen 3.8 27B as Supervisor (action-biased), use Terra as Reviewer (thoroughness is a strength there). Include the experimental-environment declaration in the dispatch prompt. Apply the 3-strike rule.
 
+**Current state (2026-10-27):** S and P are on the Sonnet class (Claude Sonnet 5.5) again, for precision. This is the risk-averse family the incident flagged, so the standing mitigations apply: the experimental-environment declaration in every dispatch prompt, the 3-strike rule, the reset directive (`templates/prompts/reset-directive.md`), and the gate-record model-identity requirement. If the over-restriction pattern recurs, apply the reset directive first, then consider reverting S to local Qwen.
+
 See [`notes/2026-09-30-supervisor-strictness-incident.md`](../notes/2026-09-30-supervisor-strictness-incident.md) for the full incident report.
+
+## Model quota fallback behavior
+
+- The harness handles the configured fallback chains transparently; orchestration does not perform quota health-checks or model-service operations.
+- The gate record must name the model that **actually** performed the role's work (after any fallback), not the one that was requested.
+- A quota or transport attempt on role work is not an engineering strike (see the 3-strike rule).
 
 ## Model swap mid-process
 

@@ -2,31 +2,31 @@
 
 Concrete OMP subagent configuration for the 5 core roles. The Observer is not an OMP subagent (see `README.md` in this directory).
 
-**Last updated:** 2026-10-01. Model assignments reflect the post-Terra-strictness-incident decisions. The Researcher and Planner model choices are still under discussion.
+**Last updated:** 2026-10-27. Model assignments reflect the current `modelRoles` in `~/.omp/agent/config.yml`; all choices are decided.
 
 ## Model assignment summary
 
 | Role | Model | Status |
 | --- | --- | --- |
-| S — Supervisor | `vllm-tp2/qwen3.8-27b-q4-gpukv-native` | Decided |
-| P — Planner | `github-copilot/claude-sonnet-5` | Under discussion (ideally Opus 5.5, but cost-prohibitive) |
-| R — Researcher | `deepseek/deepseek-flash` | Under discussion (current in `~/.omp/agent/config.yml`) |
-| E — Executor | `vllm-tp2/qwen3.8-27b-q4-gpukv-native` | Decided |
-| RV — Reviewer | `openai-codex/gpt-5.6-terra` or `openai-codex/gpt-6-sol` | Decided (same cost per token; either works) |
+| S — Supervisor | `anthropic/claude-sonnet-5-5:high` | Decided |
+| P — Planner | `anthropic/claude-sonnet-5-5:xhigh` | Decided |
+| R — Researcher | `deepseek/deepseek-flash:high` | Decided |
+| E — Executor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh` | Decided |
+| RV — Reviewer | `openai-codex/gpt-6.1-sol:high` | Decided |
 
 ## Where this lives in OMP
 
 - The R, P, E, RV definitions live in `agent-orchestration/.omp/agents/{researcher,planner,executor,reviewer}.md` (project agents; first-wins, so they override any bundled agent with the same name — including the bundled `reviewer`).
 - Each file carries the role's `name`, `description`, a `model: "@<role>"` frontmatter alias, and the key-rules block as its system prompt body. Full mandate: load `agent-orchestration/templates/prompts/<role>.md`.
-- The model assignments above are the concrete values of the global roles `researcher`, `planner`, `executor`, `reviewer` in `~/.omp/agent/config.yml` (`modelRoles`). Swapping a model is a one-line edit to that file; no agent file changes.
+- The model assignments above are the concrete values of the global roles `research`, `plan`, `execution`, `review` in `~/.omp/agent/config.yml` (`modelRoles`); `task` aliases `@execution`. Swapping a model is a one-line edit to that file; no agent file changes.
 - Rate-limit fallbacks are configured in the same file under `retry.fallbackChains` (see [`markdown/03-model-assignment.md`](../markdown/03-model-assignment.md#fallback-chains)).
-- S is not a subagent: it is the main session, modelled by `modelRoles.default` / `modelRoles.supervisor` (= `vllm-tp2/qwen3.8-27b-q4-gpukv-native:high`).
+- S is not a subagent: it is the main session, modelled by `modelRoles.supervisor` (= `anthropic/claude-sonnet-5-5:high`). `modelRoles.default` remains the local Qwen model (`vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh`) and also covers the smol/slow/live roles.
 
 ## Supervisor (S)
 
 ```yaml
 name: supervisor
-model: vllm-tp2/qwen3.8-27b-q4-gpukv-native:high
+model: anthropic/claude-sonnet-5-5:high  # main session: modelRoles.supervisor
 description: >
   Autonomous execution coordinator. Dispatches R, P, E, RV in sequence.
   Writes gate records. Applies the 3-strike rule. Biased toward action.
@@ -44,7 +44,7 @@ system_prompt: |
 
 ```yaml
 name: researcher
-model: deepseek/deepseek-flash:high  # under discussion; qwen3.8 also viable
+model: deepseek/deepseek-flash:high
 description: >
   Gathers current-source facts, environment inventory, external-owner evidence.
   Runs commands against the target environment. Read-only for product files.
@@ -61,7 +61,7 @@ system_prompt: |
 
 ```yaml
 name: planner
-model: github-copilot/claude-sonnet-5  # under discussion; ideally Opus 5.5 but cost-prohibitive
+model: anthropic/claude-sonnet-5-5:xhigh
 description: >
   Writes or revises the workcard from R's evidence.
   The workcard is a short execution contract, not a second architecture plan.
@@ -77,7 +77,7 @@ system_prompt: |
 
 ```yaml
 name: executor
-model: vllm-tp2/qwen3.8-27b-q4-gpukv-native:high
+model: vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh
 description: >
   Implements one approved workcard. The only role that changes product files.
   Runs targeted tests and declared smoke.
@@ -95,7 +95,7 @@ system_prompt: |
 
 ```yaml
 name: reviewer
-model: openai-codex/gpt-5.6-terra:xhigh  # or openai-codex/gpt-6-sol:xhigh (same cost per token)
+model: openai-codex/gpt-6.1-sol:high
 description: >
   Independently reviews E's diff and evidence. Findings are advisory.
   Does not block the package unilaterally.

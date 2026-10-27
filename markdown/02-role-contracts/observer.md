@@ -48,8 +48,8 @@ Translate the LLM-generated gate records and evidence documents into plain Engli
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **Qwen 3.8 27B** | Best | Good at translating technical language to plain English. Concise. Does not over-interpret. |
-| GPT 5.6 Terra | Poor for O | Overly formal. Produces dense, jargon-heavy summaries that need another layer of translation. |
+| **Qwen 3.8 27B** | In use / Best | Concise plain-English translation; cheap for a read-only role. |
+| GPT 5.6 Terra | Historical (2026-09) | Poor for O — too formal. |
 
 ## Position in the orchestration
 

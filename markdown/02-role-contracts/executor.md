@@ -45,8 +45,9 @@ Implement one approved workcard: write the code, run the targeted tests, perform
 
 | Model | Fit | Why |
 | --- | --- | --- |
-| **Qwen 3.8 27B** | Best | Follows the workcard precisely. Does not over-implement. Runs commands without hesitation. |
-| GPT 5.6 Terra | Good for E | Careful and thorough. The risk-aversion is less harmful here because E's scope is tightly bounded by the workcard. |
+| **Qwen 3.8 27B** | In use / Best | Action-biased; follows workcards precisely; fits the local session budget. |
+| Claude Sonnet 5.5 | Good, overkill | Higher precision than the role needs; quota-bound. |
+| GPT 5.6 Terra | Historical (2026-09) | Good for E (thorough). |
 
 ## Code discipline
 

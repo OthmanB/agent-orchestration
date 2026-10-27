@@ -18,7 +18,7 @@ You have a vision document (plain English or article-style) describing a system 
 
 ## Quick start
 
-1. **Pick your model assignment** — see [`markdown/03-model-assignment.md`](markdown/03-model-assignment.md). The short version: use an action-biased model (e.g., Qwen 3.8 27B) for Supervisor + Executor, a thorough model (e.g., GPT 5.6 Terra) for Reviewer.
+1. **Pick your model assignment** — see [`markdown/03-model-assignment.md`](markdown/03-model-assignment.md). The short version: local Qwen 3.8 27B for Executor (and the default/smol roles), Claude Sonnet 5.5 on a subscription (with a fallback chain) for Supervisor + Planner, DeepSeek Flash for Researcher, GPT 6.1 Sol for Reviewer.
 2. **Write your vision document** — plain English, article-style. State the goal, the constraints (scope boundary), and what is out of scope.
 3. **Dispatch the Supervisor** — use the prompt template at [`templates/prompts/supervisor.md`](templates/prompts/supervisor.md). Fill in the placeholders. Include the experimental-environment declaration if you are working in a test environment.
 4. **Monitor via the Observer** — use the prompt template at [`templates/prompts/observer.md`](templates/prompts/observer.md) in a separate session. The Observer reads the gate records and explains in plain English what is happening, what is next, and whether the path is reasonable.

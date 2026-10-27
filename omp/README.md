@@ -71,14 +71,14 @@ The prompt templates in [`templates/prompts/`](../templates/prompts/) are design
 
 ## OMP model configuration
 
-In OMP, the model for each role is configured in the subagent definition. The recommended assignment (see [`markdown/03-model-assignment.md`](../markdown/03-model-assignment.md)):
+Each subagent file in `agent-orchestration/.omp/agents/` carries a `model: "@<alias>"` frontmatter alias; the alias resolves through `modelRoles` in `~/.omp/agent/config.yml`. S is not a subagent — it is the main session, set by `modelRoles.supervisor`. Current assignment (see [`markdown/03-model-assignment.md`](../markdown/03-model-assignment.md)):
 
-| Role | Model | OMP config key |
+| Role | Model | Config location |
 | --- | --- | --- |
-| S — Supervisor | `vllm-tp2/qwen3.8-27b-q4-gpukv-native:high`| `supervisor.model` (main session: `modelRoles.default` / `modelRoles.supervisor`) |
-| P — Planner |  `github-copilot/claude-sonnet-5` | `planner.model` |
-| R — Researcher | `deepseek/deepseek-flash` | `researcher.model` |
-| E — Executor | `vllm-tp2/qwen3.8-27b-q4-gpukv-native:high`| `executor.model` |
-| RV — Reviewer | `openai-codex/gpt-5.6-terra` or `openai-codex/gpt-6-sol`| `reviewer.model` |
+| S — Supervisor | `anthropic/claude-sonnet-5-5:high` | `modelRoles.supervisor` (main session) |
+| P — Planner | `anthropic/claude-sonnet-5-5:xhigh` | `.omp/agents/planner.md` → `modelRoles.plan` |
+| R — Researcher | `deepseek/deepseek-flash:high` | `.omp/agents/researcher.md` → `modelRoles.research` |
+| E — Executor | `vllm-tp2-local/qwen3.8-27b-q4-gpukv-native:xhigh` | `.omp/agents/executor.md` → `modelRoles.execution` |
+| RV — Reviewer | `openai-codex/gpt-6.1-sol:high` | `.omp/agents/reviewer.md` → `modelRoles.review` |
 
-The Observer is not an OMP subagent. It runs in a separate session with its own model (Qwen 3.8 27B recommended).
+The Observer is not an OMP subagent. It runs in a separate session with its own model (local Qwen 3.8 27B, i.e. the `default` role, recommended).

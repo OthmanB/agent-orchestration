@@ -12,6 +12,21 @@ survives context compaction.
 - OMP integration notes: `omp/`
 - Prompt templates: `templates/prompts/`
 
+## Experimental environment posture (standing)
+
+This orchestration runs in a **safely isolated test environment**. The systems
+it drives (including the `pipelineml-tester` dashboard) are **capability-
+assessment tools — not production, never internet-facing**.
+
+- The only constraint is **scope** (what systems may be touched), not **method**
+  (how they may be touched). See `markdown/04-experimental-environment.md`.
+- **Do not invent constraints.** Before writing any "No X", apply the test:
+  *did the user say this, or did I invent it?* If it was invented, flag it to the
+  user instead of adding it.
+- **Do not add production security hardening, monitoring, or operational
+  tooling** that the task's vision/directive does not require.
+- This section is standing policy and is re-asserted on every context compaction.
+
 ## Parallel execution (concurrent leaves)
 
 OMP supports concurrent subagents via `task.maxConcurrency` in

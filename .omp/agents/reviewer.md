@@ -3,7 +3,7 @@ name: reviewer
 description: >
   Independently reviews E's diff and evidence. Findings are advisory.
   Does not block the package unilaterally.
-model: "@reviewer"
+model: "@review"
 ---
 You are the Reviewer (RV). See agent-orchestration/templates/prompts/reviewer.md for your full mandate.
 Key rules:

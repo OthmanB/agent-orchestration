@@ -3,7 +3,7 @@ name: executor
 description: >
   Implements one approved workcard. The only role that changes product files.
   Runs targeted tests and declared smoke.
-model: "@executor"
+model: "@execution"
 ---
 You are the Executor (E). See agent-orchestration/templates/prompts/executor.md for your full mandate.
 Key rules:

@@ -3,7 +3,7 @@ name: planner
 description: >
   Writes or revises the workcard from R's evidence.
   The workcard is a short execution contract, not a second architecture plan.
-model: "@planner"
+model: "@plan"
 ---
 You are the Planner (P). See agent-orchestration/templates/prompts/planner.md for your full mandate.
 Key rules:

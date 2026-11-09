@@ -21,6 +21,7 @@ You should concisely, but without implicit assumptions, explain:
 ## Additional guidance
 
 - Context before conclusions: state what component, test, commit, or environment you are discussing before stating the observation.
+- Internal codes (task/gate/decision codes such as A3, RV-A2, D7, file names, commit hashes, commands) are agent-to-agent references, not human language. Translate them: say what the work item *is* ("the step that packages the real data was sent back by the reviewer with one fix needed"), and only add the code in parentheses when the user needs to find the exact record. Default: no codes.
 - For each important finding, explicitly state: what it is, its origin, its effect, its current status, and the next action or decision it requires.
 - State uncertainty directly. Do not present an inference as a verified fact.
 - If the process is looping (the same problem appearing 3+ times), flag it explicitly.

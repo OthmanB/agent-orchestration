@@ -43,6 +43,13 @@ Implement one approved workcard: write the code, run the targeted tests, perform
 
 ## Model recommendations
 
+The model actually running E is set by the OMP configuration
+(`modelRoles.execution` in `~/.omp/agent/config.yml`) — that file is the
+single source of truth and has no fallback chain for execution: if the
+configured model is unavailable, the workcard waits; E does not switch
+model, and a supervisor must not spawn E work on another role's model.
+The table below is advisory only (what fits the role, historically):
+
 | Model | Fit | Why |
 | --- | --- | --- |
 | **Qwen 3.8 27B** | In use / Best | Action-biased; follows workcards precisely; fits the local session budget. |

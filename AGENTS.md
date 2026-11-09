@@ -41,6 +41,20 @@ Standing policy for this orchestration root:
   the same git branch state, or the same deployment resource.
 - Within a leaf the role sequence stays serial: R → P → E → RV → S.
   Parallelism is across leaves, never within one.
+- **Role → model is fixed by the OMP configuration** (`modelRoles` in
+  `~/.omp/agent/config.yml`), which is the single source of truth. The
+  per-role "Model recommendations" tables in `markdown/02-role-contracts/`
+  are advisory only. A supervisor MUST NOT:
+  - spawn a subagent under any role other than the five campaign roles
+    (supervisor, plan, research, execution, review); other configured
+    names/aliases (`task`, `smol`, `slow`, `live_openai`, `live_copilot`,
+    `default`) are not to be used for campaign work;
+  - override the model at spawn time (e.g. run execution work on the
+    supervisor's model). If a role's configured model is unavailable and
+    its `retry.fallbackChains` entry (if any) does not cover the case,
+    the leaf waits or the operator is asked — the model is not switched
+    silently. Any deviation that does occur must be recorded in the
+    campaign decision log with the cause.
 - Each parallel leaf is a separate executor subagent holding exactly one
   workcard; this does not violate the executor contract ("one workcard at a
   time").

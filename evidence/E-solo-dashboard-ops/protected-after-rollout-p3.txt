@@ -1,0 +1,40 @@
+## deployments ml-components (name uid rv replicas image)
+mlflow	917297cb-e278-4462-a510-4ef6526ed871	7377245	1	burakince/mlflow:3.7.0
+pipelineml-anomaly-detector	7c6e38cb-7ace-4851-ad23-9742e93c0ddf	7376946	1	ghcr.io/appthrust/pipelineml-anomaly-detector:feature-cnn2dlstm-bayesian-statistical-detector-v2-7ee1951
+pipelineml-tester-orchestrator	a5d4269a-3306-415f-905d-2b75df0fd66d	47985	1	ghcr.io/appthrust/pipelineml-tester/orchestrator:sha-0d6bff8
+pipelineml-tester-workload-checkout-api-v1	82527c1c-2302-4838-8451-637708f1bc76	7116004	3	ghcr.io/appthrust/pipelineml-tester/workload:sha-0d6bff8
+pipelineml-tester-workload-checkout-api-v2	610ac1bf-9bba-4f2a-9173-c5f3354a446a	4069514	2	ghcr.io/appthrust/pipelineml-tester/workload:sha-0d6bff8
+pipelineml-tester-workload-checkout-invalid-missing-component	0d63f5f9-7679-4eca-9e1b-5c4ecfdace20	331592	0	ghcr.io/appthrust/pipelineml-tester/workload:sha-0d6bff8
+pipelineml-tester-workload-checkout-worker-v1	3962d664-654c-47a9-8bb7-97c928ab55e8	4066516	3	ghcr.io/appthrust/pipelineml-tester/workload:sha-0d6bff8
+pipelineml-tester-workload-payments-api-v1	afa2e11d-2a29-4d1b-b8e7-6e8c26810e38	4066619	2	ghcr.io/appthrust/pipelineml-tester/workload:sha-0d6bff8
+training-daemon	e1450c38-f4f9-4c21-89fa-9ae662c2b2fc	54419	1	ghcr.io/appthrust/pipelineml-training-daemon:feature-cnn2dlstm-bayesian-statistical-daemon-3a3f23c
+## pods ml-components (name uid start restarts)
+mlflow-6bd6d8d6ff-64kmj	cad3ba2a-d680-47da-89ed-3bb12e5313b9	2026-10-01T08:06:17Z	4
+mlflow-pg-1	05abac53-db7a-4529-8c84-e092c304f5a4	2026-10-01T07:48:17Z	4
+pipelineml-anomaly-detector-7579bd8777-lklm5	21a900a1-f59c-425d-9409-68d29349f813	2026-10-02T12:49:09Z	5
+pipelineml-tester-orchestrator-f9ddcc94-7ss8v	3c639897-77b4-4aff-ada4-b5aeec51561b	2026-10-01T12:04:12Z	4
+pipelineml-tester-workload-checkout-api-v1-55d59c5477-b4xkt	3448371f-d01f-4bde-9956-422083c1d952	2026-10-02T19:02:29Z	40
+pipelineml-tester-workload-checkout-api-v1-55d59c5477-mjnlq	bc1cb8eb-c14f-4287-af51-93cb8665a5d0	2026-10-02T19:02:34Z	41
+pipelineml-tester-workload-checkout-api-v1-55d59c5477-rzpzm	ef0cafd7-c404-4ba4-99b1-4518d64cfd7e	2026-10-02T19:02:30Z	31
+pipelineml-tester-workload-checkout-api-v2-ddbc9ff69-hcfj7	4692f290-bd8e-4dc9-9c5a-3d062eff51c2	2026-10-02T19:02:29Z	31
+pipelineml-tester-workload-checkout-api-v2-ddbc9ff69-vlsl8	c6c37bda-9910-45c1-aaef-c4fa8497bbc6	2026-10-02T19:02:33Z	30
+pipelineml-tester-workload-checkout-worker-v1-5859694b47-2vwwd	a52bed81-0143-4756-bea0-1ac9478faf38	2026-10-02T19:02:29Z	30
+pipelineml-tester-workload-checkout-worker-v1-5859694b47-7gjdg	df92d91a-f21d-4980-a353-c7e392ec18a7	2026-10-02T19:02:35Z	30
+pipelineml-tester-workload-checkout-worker-v1-5859694b47-c5bdh	3756f8f1-fbf2-4093-8d79-151650ba1f43	2026-10-02T19:02:31Z	30
+pipelineml-tester-workload-payments-api-v1-5c9d564cf5-m7pr8	894a9bb0-85a3-4aa2-9dbf-44ef629b1da5	2026-10-02T19:02:32Z	30
+pipelineml-tester-workload-payments-api-v1-5c9d564cf5-qsv2m	469891e3-7a93-4956-8bda-3264d37c0212	2026-10-02T19:02:29Z	30
+training-daemon-5c4bc67cc5-wdzf8	a57a2423-5316-4d2a-83a7-366f89e38def	2026-10-01T12:36:40Z	4
+## cm ml-components
+cnpg-default-monitoring	699
+istio-ca-root-cert	6823
+kube-root-ca.crt	516
+mlflow-auth-ini-template	3306
+mlflow-dbchecker	917
+mlflow-env-configmap	916
+mlflow-migrations	914
+pipelineml-anomaly-detector-config	309796
+pipelineml-tester-config	375601
+pipelineml-tester-load-test-config	7730
+pipelineml-tester-log-generator-config	7729
+training-daemon-config	53520
+training-daemon-strategy-config	52936

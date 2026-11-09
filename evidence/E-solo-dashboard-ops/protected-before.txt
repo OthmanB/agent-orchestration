@@ -1,0 +1,9 @@
+# Protected pair + solo state BEFORE (2026-11-06 ~14:10 JST), route: ssh rtx-4000-test, kubectl --context kind-rtx-4000-cluster
+ml-components deploy pipelineml-anomaly-detector  uid=7c6e38cb-7ace-4851-ad23-9742e93c0ddf rv=7376946 replicas=1 image=ghcr.io/appthrust/pipelineml-anomaly-detector:feature-cnn2dlstm-bayesian-statistical-detector-v2-7ee1951
+ml-components deploy training-daemon              uid=e1450c38-f4f9-4c21-89fa-9ae662c2b2fc rv=54419   replicas=1 image=ghcr.io/appthrust/pipelineml-training-daemon:feature-cnn2dlstm-bayesian-statistical-daemon-3a3f23c
+ml-components pod pipelineml-anomaly-detector-7579bd8777-lklm5 uid=21a900a1-f59c-425d-9409-68d29349f813 start=2026-10-02T12:49:09Z restarts=5
+ml-components pod training-daemon-5c4bc67cc5-wdzf8             uid=a57a2423-5316-4d2a-83a7-366f89e38def start=2026-10-01T12:36:40Z restarts=4
+ml-components tester orchestrator pod uid=3c639897-77b4-4aff-ada4-b5aeec51561b start=2026-10-01T12:04:12Z restarts=4
+ml-components tester workloads: checkout-api-v1 x3 rv=7116004, checkout-api-v2 x2 rv=4069514, checkout-worker-v1 x3 rv=4066516, payments-api-v1 x2 rv=4066619 (image workload:sha-0d6bff8)
+rtx-4000-test deploy pipelineml-anomaly-detector-solo uid=825bc855-4533-4245-8f58-667b7f5fca01 rv=7376932 replicas=1 image@sha256:b5f14f637b7c8f5fef5f8ad713128b5d6c7a0e5e5a172498a162ad23fae35f7b pod=pipelineml-anomaly-detector-solo-66769bc7cf-47rv2 restarts=8 age=19d
+Note: local kubectl contexts (kind-michel-cluster/46443) are NOT the solo cluster. Solo cluster = kind-rtx-4000-cluster on host rtx-4000-test (kubectl at ~/.local/bin/kubectl). S ran 2 read-only listings (get ns / get deploy,pods -A) on monstera kind-michel-cluster while locating the cluster: no mutation.

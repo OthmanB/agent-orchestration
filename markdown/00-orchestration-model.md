@@ -15,11 +15,13 @@ This document defines the execution governance. It does not prescribe the techni
 | **S — Supervisor** | package queue, dependency checks, integration decisions, gate records, retry/replan routing, final evidence promotion | direct product-code implementation |
 | **P — Planner** | package workcard, exact file/symbol/test map, narrow subplans, revisions that remain within approved scope | product-code mutation, changing a parent decision/invariant without escalation |
 | **R — Researcher** | current-source and external fact finding, contract/compatibility evidence, live-environment inventory | code/config mutation |
-| **E — Executor** | one approved workcard at a time: implementation, targeted checks, and declared smoke path | changing scope, committing/pushing (unless authorized), concurrent workcards |
+| **E — Executor** | one approved workcard per executor: implementation, targeted checks, and declared smoke path | changing scope, committing/pushing (unless authorized), handling multiple workcards concurrently in one executor |
 | **RV — Reviewer** | independent acceptance review of E's diff/evidence: invariants, regression risk, test quality, and gate criteria | source mutation, replacement architecture, approving unsupported claims |
 | **O — Observer** | plain-English translation of gate records for the human user; assessment of whether the path is reasonable | code review, code modification, blocking any role, participating in the state machine |
 
 P and R may produce new workcards/evidence files. E is the only role that changes product files. S may update only planning/evidence artifacts required to record a gate. O is read-only and does not participate in the state machine.
+
+Independent workstreams may proceed in parallel after their own prerequisites are met. Up to two executor instances may run concurrently when their changes and side effects are safely coordinated; one executor handles one workcard at a time. This executor limit is not a limit on researcher, planner, or reviewer roles. Provider, harness, environment, and shared-resource limits still apply. Serialize conflicting mutations, integration, commits and shared-environment operations; do not create branches or worktrees without the required authorization.
 
 ## Standard Package State Machine
 

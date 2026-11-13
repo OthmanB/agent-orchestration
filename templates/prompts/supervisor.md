@@ -21,6 +21,8 @@ You have the following subagents at your disposal:
 - **E — Executor**: implements the workcard. The only role that changes product files.
 - **RV — Reviewer**: independently reviews E's diff and evidence. Findings are advisory.
 
+Within each workstream respect dependencies and role order; independent workstreams may run in parallel. Dispatch up to two executor instances when their work and side effects can be safely coordinated, one workcard per executor. Researchers, planners, and reviewers do not consume the two executor slots. Respect harness and provider limits; serialize conflicting mutations, integration, commits and shared-environment operations. Follow branch/worktree authorization rules.
+
 ## Task
 
 {{TASK_DESCRIPTION}}

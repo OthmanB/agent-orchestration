@@ -4,7 +4,7 @@ This directory contains OMP-specific integration details. The core orchestration
 
 ## OMP subagent setup
 
-OMP (Oh My Pi) dispatches subagents via its `task` tool. Within a leaf, dispatch is serial (R→P→E→RV→S). OMP also supports concurrent subagents (`task.maxConcurrency` in `~/.omp/agent/config.yml`; OMP default is 32) — this campaign sets it to 2, so up to two independent leaves may run in parallel. See `AGENTS.md` § Parallel execution at the repo root for the scope and serialization rules.
+OMP (Oh My Pi) dispatches subagents via its `task` tool. Within a leaf, dispatch follows dependencies (R→P→E→RV→S); independent leaves may proceed in parallel. The recommended `task.maxConcurrency` is 6, a total harness cap across roles, not a per-role reservation. See the concurrency guidance below.
 
 See [`subagent-setup.md`](subagent-setup.md) for the concrete OMP subagent definitions.
 
@@ -48,16 +48,12 @@ This is the "manual feedback loop" described in [`markdown/02-role-contracts/obs
 
 ### Subagent concurrency
 
-OMP supports concurrent subagents: `task.maxConcurrency` in `~/.omp/agent/config.yml`
-caps how many run at once (OMP default 32; this campaign sets 2). The standing
-policy (see `AGENTS.md` § Parallel execution at the repo root):
+OMP's `task.maxConcurrency` in `~/.omp/agent/config.yml` caps all simultaneously running subagents. The recommended value is 6 (OMP default 32); it is not an executor-specific limit.
 
-- Up to two independent leaves may run concurrently (local vLLM session budget).
-- Parallel leaves must touch disjoint files — separate sub-repositories where
-  possible.
-- Within a leaf, roles stay serial (R → P → E → RV → S).
-- Git commits on the canonical branch and cluster deploy/mutation steps are
-  always serialized between parallel leaves.
+- Run up to two executor instances concurrently, each on one independent workcard, subject to the local model's three-session capacity and other users of that model. Reserve capacity for other local calls.
+- Researchers, planners and reviewers do not count against the two-executor limit, but do count against the total OMP cap and any provider or resource limits.
+- Within a leaf, respect role dependencies (R → P → E → RV → S). Parallel work must have coordinated, non-conflicting files and side effects; disjoint filenames alone do not guarantee safe tests or generated outputs.
+- Serialize integration, canonical-branch commits and shared cluster mutations. Follow the repository's branch and worktree authorization rules; concurrency does not authorize a new branch or worktree.
 
 ### No auto-trigger for the Observer
 

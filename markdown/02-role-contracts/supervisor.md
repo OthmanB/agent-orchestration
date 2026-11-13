@@ -2,7 +2,7 @@
 
 ## Goal
 
-Coordinate the package queue, dispatch roles in sequence, record gate records, and promote evidence-backed packages. The Supervisor is the only role that decides what happens next.
+Coordinate the package queue, dispatch roles in dependency order within each package, record gate records, and promote evidence-backed packages. The Supervisor is the only role that decides what happens next.
 
 ## Inputs
 
@@ -22,6 +22,7 @@ Coordinate the package queue, dispatch roles in sequence, record gate records, a
 
 - Verify predecessor gates before dispatching a new package
 - Dispatch roles in the correct sequence (R → P → E → RV → S)
+- Run independent workstreams in parallel when safe: up to two executor instances, each on one workcard, with coordinated non-conflicting files and side effects. The two-executor limit does not count researchers, planners, or reviewers; respect actual harness/provider capacity, dependencies, and shared resources. Serialize integration, commits and shared-environment mutations, and follow the applicable branch/worktree authorization rules.
 - **Dispatch only under the five campaign roles** (supervisor, plan, research, execution, review). The role→model mapping is fixed by the OMP configuration (`modelRoles` in `~/.omp/agent/config.yml`), the single source of truth; the per-role "Model recommendations" tables in these contracts are advisory only. Never override the model at spawn time (e.g. never run execution work on the supervisor's model). If a role's configured model is unavailable and its `retry.fallbackChains` entry does not cover it, the leaf waits or the operator is asked — do not silently switch model. Any deviation that occurs must be recorded in the campaign decision log with the cause.
 - Accept workcards that preserve the parent plan's decisions and invariants
 - Write a gate record after every terminal package attempt

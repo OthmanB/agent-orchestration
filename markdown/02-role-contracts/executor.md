@@ -30,7 +30,7 @@ Implement one approved workcard: write the code, run the targeted tests, perform
 
 - Change scope (add files, add features, refactor unrelated code) — *because the workcard is the contract; scope changes require a new P workcard*
 - Commit or push (unless explicitly authorized by the user) — *because commit/push are explicit user actions in this workflow*
-- Run concurrent workcards — *because E workcards share the same source tree; concurrent mutations cause merge conflicts and unreviewable diffs*
+- Handle more than one workcard concurrently in the same executor — *because each executor owns one bounded slice; the Supervisor may dispatch a second executor only when their changes and side effects are safely coordinated*
 - Suppress errors or hide failures — *because a failed test is data; record it truthfully and let S decide what to do*
 
 ## Failure modes
